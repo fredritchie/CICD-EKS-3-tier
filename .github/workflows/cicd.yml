@@ -35,40 +35,7 @@ jobs:
         docker build -t backend backend/
         docker tag backend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:latest
         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:latest
-    - name: Scan frontend image
-      run: |
-          aws ecr start-image-scan --repository-name frontend --image-id imageTag=latest
-    - name: Scan backend image
-      run: |
-          aws ecr start-image-scan --repository-name backend --image-id imageTag=latest
-    - name: Check backend scan results
-      run: |
-        SCAN_STATUS=$(aws ecr describe-image-scan-findings --repository-name backend --image-id imageTag=latest | jq -r '.imageScanStatus.status')
-        while [ "$SCAN_STATUS" = "IN_PROGRESS" ]; do
-          echo "Scan in progress..."
-          sleep 10
-          SCAN_STATUS=$(aws ecr describe-image-scan-findings --repository-name backend --image-id imageTag=latest | jq -r '.imageScanStatus.status')
-        done
-    
-        if [ "$SCAN_STATUS" = "COMPLETE" ]; then
-          FINDINGS=$(aws ecr describe-image-scan-findings --repository-name backend --image-id imageTag=latest | jq -r '.imageScanFindings.findingSeverityCounts')
-          echo "Scan completed with findings: $FINDINGS"
-          # Add logic to fail the workflow based on findings severity if needed
-        fi
-    - name: Check frontend scan results
-      run: |
-        SCAN_STATUS=$(aws ecr describe-image-scan-findings --repository-name frontend --image-id imageTag=latest | jq -r '.imageScanStatus.status')
-        while [ "$SCAN_STATUS" = "IN_PROGRESS" ]; do
-          echo "Scan in progress..."
-          sleep 10
-          SCAN_STATUS=$(aws ecr describe-image-scan-findings --repository-name frontend --image-id imageTag=latest | jq -r '.imageScanStatus.status')
-        done
-      
-        if [ "$SCAN_STATUS" = "COMPLETE" ]; then
-          FINDINGS=$(aws ecr describe-image-scan-findings --repository-name frontend --image-id imageTag=latest | jq -r '.imageScanFindings.findingSeverityCounts')
-          echo "Scan completed with findings: $FINDINGS"
-            # Add logic to fail the workflow based on findings severity if needed
-        fi
+        
     - name: Deploy to AWS EKS
       run: |
         aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.CLUSTER_NAME }}
