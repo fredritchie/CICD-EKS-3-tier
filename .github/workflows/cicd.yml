@@ -24,7 +24,6 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Your SonarQube project token
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        SONAR_PROJECT_KEY: your_project_key
         
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
