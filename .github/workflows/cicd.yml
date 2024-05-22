@@ -51,7 +51,7 @@ jobs:
         docker tag frontend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
 
-    - name: Run Trivy vulnerability scanner
+    - name: Run Trivy vulnerability scanner for frontend
       uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
       with:
           image-ref: '${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest'
@@ -65,7 +65,16 @@ jobs:
         docker build -t backend backend/
         docker tag backend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:latest
         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:latest
-        
+
+    - name: Run Trivy vulnerability scanner for backend
+      uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+      with:
+          image-ref: '${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:latest'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          
     - name: Deploy to AWS EKS
       run: |
         aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.CLUSTER_NAME }}
