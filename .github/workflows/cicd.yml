@@ -17,7 +17,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       
-    - name: SonarQube Scan
+    - name: SonarQube Frontend Scan
       uses: sonarsource/sonarqube-scan-action@master
       with:
         args: >
@@ -26,7 +26,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         
-    - name: SonarQube Scan
+    - name: SonarQube Backend Scan
       uses: sonarsource/sonarqube-scan-action@master
       with:
         args: >
