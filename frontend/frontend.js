@@ -33,6 +33,10 @@ app.get('/', (req, res) => {
         padding: 0;
         background-color: #f2f2f2;
       }
+      #containerIP {
+        color: red; /* Make the IP address text red */
+        font-weight: bold;
+      }
       .container {
         max-width: 600px;
         margin: 50px auto;
@@ -77,6 +81,7 @@ app.get('/', (req, res) => {
     <div class="container">
       <h1>Welcome to Hypha DevOps Cohorts</h1>
       <h2>Enter your name here</h2>
+      <h3 id="containerIP">Container IP: ${containerIP}</h2> <div id="message" style="text-align: center; color: red; font-weight: bold;"></div>
       <form id="userForm">
         <label for="firstName">First Name:</label>
         <input type="text" id="firstName" name="firstName">
