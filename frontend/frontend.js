@@ -20,15 +20,15 @@ try {
 app.use(express.json());
 app.use(express.static('public')); // Serve static files (e.g., your HTML, CSS, JavaScript)
 
-// app.post('/submit', async (req, res) => {
-//   try {
-//     const response = await axios.post('http://backend-service.default.svc.cluster.local/submit', req.body);
-//     res.send(response.data); // Forward the response from the backend to the client
-//   } catch (error) {
-//     console.error('Error:', error);
-//     res.status(500).send({ message: 'Error invoking Backend API' });
-//   }
-// });
+app.post('/submit', async (req, res) => {
+  try {
+    const response = await axios.post('http://backend-service.default.svc.cluster.local/submit', req.body);
+    res.send(response.data); // Forward the response from the backend to the client
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send({ message: 'Error invoking Backend API' });
+  }
+});
 
 app.listen(3000, () => {
   console.log('Frontend server listening on port 3000');
