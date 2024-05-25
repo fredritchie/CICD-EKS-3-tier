@@ -2,19 +2,33 @@
 const express = require('express');
 const app = express();
 const axios = require('axios'); // Use Axios for making HTTP requests to backend
+const os = require('os');
+
+// Retrieve the container IP address once
+let containerIP; // Declare the variable outside the functions
+const networkInterfaces = os.networkInterfaces();
+containerIP = networkInterfaces.eth0[0].address; 
+
+// If it's possible the network interface might not be ready yet, consider using a try/catch
+try {
+  containerIP = networkInterfaces.eth0[0].address;
+} catch (error) {
+  console.error('Error getting container IP:', error);
+  containerIP = 'IP not found'; // Fallback in case of error
+}
 
 app.use(express.json());
 app.use(express.static('public')); // Serve static files (e.g., your HTML, CSS, JavaScript)
 
-app.post('/submit', async (req, res) => {
-  try {
-    const response = await axios.post('http://backend-service.default.svc.cluster.local/submit', req.body);
-    res.send(response.data); // Forward the response from the backend to the client
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send({ message: 'Error invoking Backend API' });
-  }
-});
+// app.post('/submit', async (req, res) => {
+//   try {
+//     const response = await axios.post('http://backend-service.default.svc.cluster.local/submit', req.body);
+//     res.send(response.data); // Forward the response from the backend to the client
+//   } catch (error) {
+//     console.error('Error:', error);
+//     res.status(500).send({ message: 'Error invoking Backend API' });
+//   }
+// });
 
 app.listen(3000, () => {
   console.log('Frontend server listening on port 3000');
