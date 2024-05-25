@@ -24,28 +24,8 @@ jobs:
       - name: Deploy to AWS EKS
         run: |
           aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.CLUSTER_NAME }}
-          if kubectl get deployment frontend-deployment -n default &> /dev/null; then
-            echo "Frontend deployment exists, updating image..."
-            kubectl rollout restart deployment frontend-deployment -n default
-          else
-            echo "Deployment doesn't exist, creating..."
-            kubectl apply -f k8s-manifests/frontend_deployment.yaml
-          fi
-
-          if kubectl get deployment backend-deployment -n default &> /dev/null; then
-            echo "Deployment exists, updating image..."
-            kubectl rollout restart deployment backend-deployment -n default
-          else
-            echo "Deployment doesn't exist, creating..."
-            kubectl apply -f k8s-manifests/backend.yaml
-          fi
-
-          if kubectl get statrefulsets mysql -n default &> /dev/null; then
-            echo "Database exists, updating image..."
-            kubectl set image statefulset mysql mysql=mysql:latest
-          else
-            kubectl apply -f k8s-manifests/database.yaml
-          fi
-
+          kubectl apply -f k8s-manifests/frontend_deployment.yaml
+          kubectl apply -f k8s-manifests/backend.yaml
+          kubectl apply -f k8s-manifests/database.yaml   
           kubectl apply -f k8s-manifests/secret.yaml
           kubectl apply -f k8s-manifests/service.yaml
