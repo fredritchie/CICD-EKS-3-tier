@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'backend/**'
+      - '.github/workflows/backend_CICD.yml'
 
 jobs:
   build-and-deploy:
@@ -63,3 +64,4 @@ jobs:
         else
           echo "Deployment doesn't exist, creating..."
           kubectl apply -f k8s-manifests/backend.yaml
+        fi
