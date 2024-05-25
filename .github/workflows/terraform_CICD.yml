@@ -8,6 +8,7 @@ on:
       - main  # Or your desired deployment branch
     paths:
       - 'terraform/**'  # Trigger only on changes to the Terraform folder
+      - '.github/workflows/terraform_CICD.yml'
 
 permissions:
   id-token: write
