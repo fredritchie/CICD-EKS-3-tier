@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'frontend/**'
+      - '.github/workflows/frontend_CICD.yml'
 
 jobs:
   build-and-deploy:
@@ -22,7 +23,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
         
-    - name: SonarQube frontend Scan
+    - name: SonarQube frontend scan
       uses: sonarsource/sonarqube-scan-action@master
       with:
         args: >
