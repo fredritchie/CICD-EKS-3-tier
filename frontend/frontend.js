@@ -2,20 +2,6 @@
 const express = require('express');
 const app = express();
 const axios = require('axios'); // Use Axios for making HTTP requests to backend
-const os = require('os');
-
-// Retrieve the container IP address once
-let containerIP; // Declare the variable outside the functions
-const networkInterfaces = os.networkInterfaces();
-containerIP = networkInterfaces.eth0[0].address; 
-
-// If it's possible the network interface might not be ready yet, consider using a try/catch
-try {
-  containerIP = networkInterfaces.eth0[0].address;
-} catch (error) {
-  console.error('Error getting container IP:', error);
-  containerIP = 'IP not found'; // Fallback in case of error
-}
 
 app.use(express.json());
 app.use(express.static('public')); // Serve static files (e.g., your HTML, CSS, JavaScript)
@@ -95,7 +81,6 @@ app.get('/', (req, res) => {
     <div class="container">
       <h1>Welcome to Hypha DevOps Cohorts</h1>
       <h2>Enter your name here</h2>
-      <h3 id="containerIP">Container IP: ${containerIP}</h2> <div id="message" style="text-align: center; color: red; font-weight: bold;"></div>
       <form id="userForm">
         <label for="firstName">First Name:</label>
         <input type="text" id="firstName" name="firstName">
