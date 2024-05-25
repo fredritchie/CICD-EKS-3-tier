@@ -6,6 +6,7 @@ on:
       - main  # Or your desired deployment branch
     paths:
       - 'k8s-manifests/**'  # Trigger only on changes to the manifest folder
+      - '.github/workflows/k8s_manifest_pipeline.yml'
 jobs:
   build-and-deploy:
     permissions:
@@ -29,17 +30,22 @@ jobs:
           else
             echo "Deployment doesn't exist, creating..."
             kubectl apply -f k8s-manifests/frontend_deployment.yaml
+          fi
+
           if kubectl get deployment backend-deployment -n default &> /dev/null; then
             echo "Deployment exists, updating image..."
             kubectl rollout restart deployment backend-deployment -n default
           else
             echo "Deployment doesn't exist, creating..."
             kubectl apply -f k8s-manifests/backend.yaml
+          fi
+
           if kubectl get statrefulsets mysql -n default &> /dev/null; then
             echo "Database exists, updating image..."
             kubectl set image statefulset mysql mysql=mysql:latest
           else
             kubectl apply -f k8s-manifests/database.yaml
+          fi
 
           kubectl apply -f k8s-manifests/secret.yaml
           kubectl apply -f k8s-manifests/service.yaml
