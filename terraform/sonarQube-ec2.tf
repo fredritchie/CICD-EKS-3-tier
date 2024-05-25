@@ -24,6 +24,6 @@ resource "aws_instance" "web" {
   vpc_security_group_ids = [aws_security_group.sonarQube-SG.id]
 
   tags = {
-    Name = "SonarQube VM"
+    Name = "SonarQube_VM"
   }
 }
