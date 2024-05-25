@@ -64,3 +64,4 @@ jobs:
         else
           echo "Deployment doesn't exist, creating..."
           kubectl apply -f k8s-manifests/frontend_deployment.yaml
+        fi
